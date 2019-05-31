@@ -1,2 +1,4 @@
 data/
 .ipynb_checkpoints
+*.tgz
+notebook/.\\mortgage_2000
