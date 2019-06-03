@@ -5,6 +5,7 @@ import cudf
 from cudf.dataframe import DataFrame
 from collections import OrderedDict
 import argparse
+from azureml.core.run import Run
 
 #### GPU ETL
 def gpu_load_performance_csv(performance_path, **kwargs):
@@ -259,9 +260,6 @@ def null_workaround(df, **kwargs):
     return df
 
 def run_gpu_workflow(col_path, acq_path, quarter=1, year=2000, perf_file="", **kwargs):
-#     acq_data_path = '../data/acq'
-#     perf_data_path = '../data/perf'
-    
     names = gpu_load_names(col_names_path=col_path)
     acq_gdf = gpu_load_acquisition_csv(acquisition_path= acq_path + "/Acquisition_"
                                       + str(year) + "Q" + str(quarter) + ".txt")
@@ -270,8 +268,7 @@ def run_gpu_workflow(col_path, acq_path, quarter=1, year=2000, perf_file="", **k
     acq_gdf.drop_column('seller_name')
     acq_gdf['seller_name'] = acq_gdf['new']
     acq_gdf.drop_column('new')
-    
-#     perf_file = perf_data_path + "/Performance_" + str(year) + "Q" + str(quarter) + ".txt"
+
     perf_df_tmp = gpu_load_performance_csv(perf_file)
     gdf = perf_df_tmp
     
@@ -557,9 +554,6 @@ def pandas_null_workaround(df, **kwargs):
     return df
 
 def run_cpu_workflow(col_path, acq_path, quarter=1, year=2000, perf_file="", **kwargs):
-#     acq_data_path = 'data/acq'
-#     perf_data_path = 'data/perf'
-    
     names = pandas_load_names(col_names_path=col_path)
     acq_gdf = pandas_load_acquisition_csv(acquisition_path= acq_path + "/Acquisition_"
                                       + str(year) + "Q" + str(quarter) + ".txt")
@@ -596,7 +590,7 @@ def run_cpu_workflow(col_path, acq_path, quarter=1, year=2000, perf_file="", **k
 
 
 def main():
-    parser = argparse.ArgumentParser("rapidssample")
+    parser = argparse.ArgumentParser("RAPIDS_ETL")
     parser.add_argument("--data_dir", type=str, help="Location of data")
     parser.add_argument("--gpu", type=int, help="Use GPU?", default=0)
     parser.add_argument('-f', type=str, default='') # added for notebook execution scenarios
@@ -604,10 +598,8 @@ def main():
     data_dir = args.data_dir
     gpu = args.gpu
     
-    
-    if gpu:
-        print('Training with CPUs')
-        num_gpu = 1
+    run = Run.get_context()
+    run.log("Running on GPU?", gpu)
 
     print("Running ETL...")
     t1 = datetime.datetime.now()
@@ -628,79 +620,7 @@ def main():
         
     t2 = datetime.datetime.now()
     print("Total ETL Time: {0}".format(str(t2-t1)))
+    run.log("Total runtime", t2-t1)
     
-#     client.run(cudf._gdf.rmm_finalize)
-#     client.run(initialize_rmm_no_pool)
-#     client
-#     print(client.ncores())
-#     dxgb_gpu_params = {
-#         'nround':            100,
-#         'max_depth':         8,
-#         'max_leaves':        2**8,
-#         'alpha':             0.9,
-#         'eta':               0.1,
-#         'gamma':             0.1,
-#         'learning_rate':     0.1,
-#         'subsample':         1,
-#         'reg_lambda':        1,
-#         'scale_pos_weight':  2,
-#         'min_child_weight':  30,
-#         'tree_method':       'gpu_hist',
-#         'n_gpus':            1, 
-#         'distributed_dask':  True,
-#         'loss':              'ls',
-#         'objective':         'gpu:reg:linear',
-#         'max_features':      'auto',
-#         'criterion':         'friedman_mse',
-#         'grow_policy':       'lossguide',
-#         'verbose':           True
-#     }
-      
-#     if cpu_predictor:
-#         print('Training using CPUs')
-#         dxgb_gpu_params['predictor'] = 'cpu_predictor'
-#         dxgb_gpu_params['tree_method'] = 'hist'
-#         dxgb_gpu_params['objective'] = 'reg:linear'
-        
-#     else:
-#         print('Training using GPUs')
-    
-#     print('Training parameters are {0}'.format(dxgb_gpu_params))
-    
-#     gpu_dfs = [delayed(DataFrame.from_arrow)(gpu_df) for gpu_df in gpu_dfs[:part_count]]
-#     gpu_dfs = [gpu_df for gpu_df in gpu_dfs]
-#     wait(gpu_dfs)
-    
-#     tmp_map = [(gpu_df, list(client.who_has(gpu_df).values())[0]) for gpu_df in gpu_dfs]
-#     new_map = {}
-#     for key, value in tmp_map:
-#         if value not in new_map:
-#             new_map[value] = [key]
-#         else:
-#             new_map[value].append(key)
-    
-#     del(tmp_map)
-#     gpu_dfs = []
-#     for list_delayed in new_map.values():
-#         gpu_dfs.append(delayed(cudf.concat)(list_delayed))
-    
-#     del(new_map)
-#     gpu_dfs = [(gpu_df[['delinquency_12']], gpu_df[delayed(list)(gpu_df.columns.difference(['delinquency_12']))]) for gpu_df in gpu_dfs]
-#     gpu_dfs = [(gpu_df[0].persist(), gpu_df[1].persist()) for gpu_df in gpu_dfs]
-    
-#     gpu_dfs = [dask.delayed(xgb.DMatrix)(gpu_df[1], gpu_df[0]) for gpu_df in gpu_dfs]
-#     gpu_dfs = [gpu_df.persist() for gpu_df in gpu_dfs]
-#     gc.collect()
-#     wait(gpu_dfs)
-    
-#     labels = None
-#     t1 = datetime.datetime.now()
-#     bst = dxgb_gpu.train(client, dxgb_gpu_params, gpu_dfs, labels, num_boost_round=dxgb_gpu_params['nround'])
-#     t2 = datetime.datetime.now()
-#     print("Training time ...")
-#     print(t2-t1)
-#     print('str(bst) is {0}'.format(str(bst)))
-#     print('Exiting script')
-
 if __name__ == '__main__':
     main()

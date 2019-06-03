@@ -2,3 +2,8 @@ data/
 .ipynb_checkpoints
 *.tgz
 notebook/.\\mortgage_2000
+notebook/.azureml
+notebook/config
+notebook/mortgage_np
+notebook/unswiot
+notebook/*.tar.gz
