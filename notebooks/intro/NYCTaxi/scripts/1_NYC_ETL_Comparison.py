@@ -105,36 +105,62 @@ def add_features(df, gpu):
 
 ########## WORKFLOWS ############
 def run_gpu_workflow(data_path):
-    print(' LOADING DATA '.center(48, '#'))
+    t_start = datetime.datetime.now()
+    print(' LOADING DATA '.center(64, '#'))
     taxi_df = cudf.read_csv(os.path.join(data_path, '2016/yellow_tripdata_2016-01.csv'))
+    t_next = datetime.datetime.now()
+    print_time(t_next, t_start, t_start)
     
-    print(' NUMBER OF ROWS: {0:,} '.format(len(taxi_df)).center(48, '#'))
+    print()
+    print('> NUMBER OF ROWS: {0:,} <'.format(len(taxi_df)).center(48, '-'))
+    print()
     
-    print(' CLEANING DATA '.center(48, '#'))
+    print(' CLEANING DATA '.center(64, '#'))
     taxi_df = clean(taxi_df, remap, must_haves, gpu=1)
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
+    t_next = t_curr
     
-    print(' SUBSETTING DATA '.center(48, '#'))
+    print(' SUBSETTING DATA '.center(64, '#'))
     # apply a list of filter conditions to throw out records with missing or outlier values
     taxi_df = taxi_df.query(' and '.join(query_frags))
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
+    t_next = t_curr
     
-    print(' FEATURIZING DATA '.center(48, '#'))
+    print(' FEATURIZING DATA '.center(64, '#'))
     taxi_df = add_features(taxi_df, gpu=1)
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
     
 def run_cpu_workflow(data_path):
-    print(' LOADING DATA '.center(48, '#'))
+    t_start = datetime.datetime.now()
+    print(' LOADING DATA '.center(64, '#'))
     taxi_df = pd.read_csv(os.path.join(data_path, '2016/yellow_tripdata_2016-01.csv'))
+    t_next = datetime.datetime.now()
+    print_time(t_next, t_start, t_start)
     
-    print(' NUMBER OF ROWS: {0:,} '.format(len(taxi_df)).center(48, '#'))
+    print()
+    print('> NUMBER OF ROWS: {0:,} <'.format(len(taxi_df)).center(64, '-'))
+    print()
     
-    print(' CLEANING DATA '.center(48, '#'))
+    print(' CLEANING DATA '.center(64, '#'))
     taxi_df = clean(taxi_df, remap, must_haves, gpu=0)
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
+    t_next = t_curr
     
-    print(' SUBSETTING DATA '.center(48, '#'))
+    print(' SUBSETTING DATA '.center(64, '#'))
     # apply a list of filter conditions to throw out records with missing or outlier values
     taxi_df = taxi_df.query(' and '.join(query_frags))
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
+    t_next = t_curr
     
-    print(' FEATURIZING DATA '.center(48, '#'))
+    print(' FEATURIZING DATA '.center(64, '#'))
     taxi_df = add_features(taxi_df, gpu=0)
+    t_curr = datetime.datetime.now()
+    print_time(t_curr, t_next, t_start)
 
 def main():
     parser = argparse.ArgumentParser("NYC Taxi GPU vs CPU ETL comparison")
