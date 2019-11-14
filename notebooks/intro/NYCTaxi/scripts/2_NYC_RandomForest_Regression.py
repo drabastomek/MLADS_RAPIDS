@@ -129,7 +129,7 @@ def main():
 
     print("Running Random Forest on {0}...\n".format('GPU' if gpu else 'CPU'))
     t1 = datetime.datetime.now()
-    data_path = os.path.join(data_dir, "data/nyctaxi/2016/yellow_tripdata_2016-01_transformed.csv")
+    data_path = os.path.join(data_dir, "data/nyctaxi/2016/featurized_yellow_tripdata_2016-01.csv")
     
     if gpu:
         run_gpu_workflow(data_path, 17)
