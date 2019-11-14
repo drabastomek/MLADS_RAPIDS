@@ -35,6 +35,10 @@ query_frags = [
     'dropoff_latitude > 40 and dropoff_latitude < 42'
 ]
 
+## UTILS
+def print_time(t_curr, t_next, t_start):
+    print('> Step time: {0}, elapsed time: {1}'.format(str(t_curr - t_next), str(t_curr - t_start)).rjust(64, '-'))
+
 ########## METHODS DECLARATIONS ############
 # data cleaner and type converted function
 def clean(df, remap, must_haves, gpu):    
@@ -96,6 +100,8 @@ def add_features(df, gpu):
     else:
         df = df.drop('pickup_datetime', axis=1)
         df = df.drop('dropoff_datetime', axis=1)
+        
+    return df
 
 ########## WORKFLOWS ############
 def run_gpu_workflow(data_path):
