@@ -12,13 +12,12 @@ We have two tracks:
 2. `notebooks/deep_dive` builds on the introductory scripts and provides more examples on how to extend and distrubute the workloads
 
 ## Presenters
-* Tom Drabas is a Senior Data Scientist at Microsoft. He has over 15 years of international experience working in airline, telecommunication and technology industries. He holds PhD in airline operations research field from the University of New South Wales. During his time at Microsoft he has published multiple books and authored a video series on data science, machine learning and distributed computing in Spark. His research interests include parallel, deep learning and machine learning algorithms and their applications. 
+* Tom Drabas (Microsoft)
+* John Zedlewski (NVIDIA)
+* Brad Rees (NVIDIA)
+* Paul Mahler 
+* Nick Becker
 
-* Keith Kraus is a manager in the AI infrastructure team at NVIDIA. He is a core developer of RAPIDS and works extensively on the Python interface, API design, distributed computation architecture, and big data integration. Prior to joining NVIDIA, Keith worked in cybersecurity, focused on building a GPU-Accelerated big data solution for advanced threat detection. Keith holds an MEng in networked information systems from Stevens Institute of Technology.
-
-* Paul Mahler is a Senior Data Scientist at NVIDIA in Boulder, CO. At NVIDIA, Paul’s focus has been on building tools that accelerate data science workflows by leveraging the power of GPU technology. Prior to NVIDIA, Paul worked as a data scientist at a Fin Tech start-up in San Francisco, and as an associate manager in Accenture Tech Labs. In a different life, Paul was an economist who worked at the World Bank and Fannie Mae.
-
-* Brad Rees
 
 ## Greater team
 
@@ -29,3 +28,5 @@ We have two tracks:
 * Brad Rees
 
 * Michael Beaumont
+
+* Chau Dang
