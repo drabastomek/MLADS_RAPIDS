@@ -10,3 +10,4 @@ unswiot
 scripts/config.json
 scripts/azure_mlads*
 scripts/nyctaxi
+dask-worker-space
