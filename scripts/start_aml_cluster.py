@@ -47,14 +47,14 @@ if __name__ == '__main__':
     parser.add_argument("--config", default="./config.json")
     parser.add_argument("--cluster_name", default="RAPIDS")
     parser.add_argument("--experiment_name", default="RAPIDS0100")
-    parser.add_argument("--vm_size", default="Standard_ND6S")
+    parser.add_argument("--vm_size", default="Standard_ND12S")
     parser.add_argument("--node_count", default=1)
     parser.add_argument("--min_nodes", default=0)
-    parser.add_argument("--max_nodes", default=2)
+    parser.add_argument("--max_nodes", default=1)
     parser.add_argument("--admin_username", default="rapids")
     parser.add_argument("--admin_user_password", default="rapids")
-    parser.add_argument("--admin_user_ssh_key", default="~/.ssh/id_rsa.pub")
-    parser.add_argument("--ssh_id", default="~/.ssh/id_rsa")
+    parser.add_argument("--admin_user_ssh_key", default="./azureml_mlads.pub")
+    parser.add_argument("--ssh_id", default="./azure_mlads")
 
     parser.add_argument("--jupyter_token", default=uuid.uuid1().hex)
     parser.add_argument("--local_notebook_port", default="8888")
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     subscription_id = config["subscription_id"]
     resource_group  = config["resource_group"]
     workspace_name  = config["workspace_name"]
-    interactive_auth = InteractiveLoginAuthentication(tenant_id="<your-tenant-id-here>")
+    interactive_auth = InteractiveLoginAuthentication(tenant_id='<YOUR-TENANT-ID-HERE>')
 
     ### CONNECT TO WORKSPACE
     print_message(f'CONNECTING TO WORKSPACE {workspace_name}')
@@ -147,7 +147,7 @@ if __name__ == '__main__':
             , os.path.join(args.nyctaxi_src_path, "nyctaxi")
             , os.path.join(args.nyctaxi_dst_path, "nyctaxi"))
 
-    n_gpus_per_node = 1 ### WE'RE USING ND6
+    n_gpus_per_node = 2 ### WE'RE USING ND6
 
     print_message("DECLARING ESTIMATOR")
   
